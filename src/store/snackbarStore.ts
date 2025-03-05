@@ -2,8 +2,17 @@ import { create } from "zustand";
 
 interface SnackbarStore {
     message: string;
+    severity: "error" | "warning" | "info" | "success";
     isShowing: boolean;
-    showSnackbar: (message: string) => void;
+    showSnackbar: (
+        {
+            message,
+            severity,
+        }: {
+            message: string;
+            severity: "error" | "warning" | "info" | "success";
+        }
+    ) => void;
     hideSnackbar: () => void;
 }
 
@@ -11,6 +20,7 @@ interface SnackbarStore {
 export const useSnackbar = create<SnackbarStore>((set) => ({
     message: "",
     isShowing: false,
-    showSnackbar: (message) => set({ message, isShowing: true }),
+    severity: "info",
+    showSnackbar: ({ message, severity }) => set({ message, severity, isShowing: true }),
     hideSnackbar: () => set({ message: "", isShowing: false }),
 }));
