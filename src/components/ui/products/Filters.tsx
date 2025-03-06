@@ -1,8 +1,9 @@
 import { Stack, TextField, FormControl, InputLabel, Select, MenuItem, IconButton } from '@mui/material'
 import { useState } from 'react';
 import { MdAdd } from 'react-icons/md';
+import { useNavigate } from 'react-router';
 
-const Filters = ({ filters, dispatch, categories, onAdd }: {
+const Filters = ({ filters, dispatch, categories }: {
     filters: {
         search: string;
         sortBy: string;
@@ -11,10 +12,9 @@ const Filters = ({ filters, dispatch, categories, onAdd }: {
     },
     categories: string[],
     dispatch: React.Dispatch<{ type: string, payload: string }>
-    onAdd: () => void
 }) => {
     const [search, setSearch] = useState(filters.search)
-
+    const navigate = useNavigate()
     return (
         <Stack direction="row" className='max-sm:flex-wrap-reverse max-sm:gap-y-2 !space-0 !gap-2 !gap-y-4'>
             <TextField
@@ -82,7 +82,7 @@ const Filters = ({ filters, dispatch, categories, onAdd }: {
                     </Select>
                 </FormControl>
             </Stack>
-            <IconButton aria-label="add" className='h-fit !bg-blue-400 hover:!bg-blue-500 !text-white !mt-2' onClick={onAdd} >
+            <IconButton aria-label="add" className='h-fit !bg-blue-400 hover:!bg-blue-500 !text-white !mt-2' onClick={() => navigate("/products/add")}>
                 <MdAdd size={24} />
             </IconButton>
         </Stack >

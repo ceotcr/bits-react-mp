@@ -41,7 +41,7 @@ export const getCategories = async () => {
 
 export const addProductAPI = async (product: TProductFormSchema) => {
     const response = await callApi<TProductFormSchema, IProduct>({
-        url: "/products",
+        url: "/products/add",
         method: "POST",
         data: product,
     })

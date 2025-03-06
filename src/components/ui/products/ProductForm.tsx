@@ -1,18 +1,26 @@
 import { useForm } from "react-hook-form";
 import { IProduct } from "../../../libs/types";
-import { FormControl, TextField, Select, MenuItem, Button, Stack, IconButton, InputLabel } from "@mui/material";
+import { FormControl, TextField, Select, MenuItem, Button, Stack, InputLabel, Typography } from "@mui/material";
 import { ProductFormSchema, TProductFormSchema } from "../../../libs/schemas/productForm";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useProducts } from "../../../store/productsStore";
-import { addProductAPI, updateProductAPI } from "../../../libs/apicalls/products";
+import { addProductAPI, getCategories, updateProductAPI } from "../../../libs/apicalls/products";
 import { useSnackbar } from "../../../store/snackbarStore";
-import React from "react";
-import { MdClose } from "react-icons/md";
+import { useQuery } from "@tanstack/react-query";
+import { useNavigate } from "react-router";
 
-const ProductForm = ({ product, mode, categories, setShowForm }: { product: IProduct | null; mode: 'add' | 'edit'; categories: string[], setShowForm: React.Dispatch<React.SetStateAction<boolean>> }) => {
+const ProductForm = ({ product, mode}: { product: IProduct | null; mode: 'add' | 'edit'; }) => {
     const { addProduct, updateProduct } = useProducts()
     const { showSnackbar } = useSnackbar()
-    const { register, formState: { isSubmitting, errors }, handleSubmit, getValues } = useForm<TProductFormSchema>({
+
+    const { data: categories } = useQuery({
+        queryKey: ['categories'],
+        queryFn: getCategories,
+        refetchOnWindowFocus: false,
+        refetchOnMount: false,
+    })
+    const navigate = useNavigate()
+    const { register, formState: { isSubmitting, errors }, handleSubmit, watch } = useForm<TProductFormSchema>({
         mode: 'onChange',
         resolver: zodResolver(ProductFormSchema),
         defaultValues: {
@@ -30,20 +38,16 @@ const ProductForm = ({ product, mode, categories, setShowForm }: { product: IPro
             if (mode === 'edit' && product) updateProduct(res)
             else addProduct(res)
             showSnackbar({ message: `Product ${mode === 'add' ? 'added' : 'updated'} successfully`, severity: 'success' })
-            setShowForm(false)
+            navigate('/products')
         }
         else {
             showSnackbar({ message: 'Failed to add product', severity: 'error' })
         }
     }
     return (
-        <div className="fixed top-0 left-0 w-full h-full inset-0 bg-[rgba(0,0,0,0.5)] flex items-center justify-center z-50">
-            <form className="flex flex-col w-full md:max-w-md rounded-lg gap-4 bg-white p-4 max-h-[720px] overflow-y-auto h-[80vh]" onSubmit={handleSubmit(onSubmit)}>
-                <Stack direction="row" justifyContent="space-between" alignItems="center">
-                    <h2 className="text-xl">{mode === 'add' ? 'Add Product' : 'Edit Product'}</h2>
-                    <IconButton onClick={() => setShowForm(false)}>
-                        <MdClose size={24} />
-                    </IconButton>
+            <form className="grid grid-cols-1 md:grid-cols-2 w-full max-w-2xl mx-auto rounded-lg gap-4 p-4" onSubmit={handleSubmit(onSubmit)}>
+                <Stack direction="row" justifyContent="space-between" className="md:col-span-2" alignItems="center">
+                    <Typography variant="h2" mb={4}>{mode === 'add' ? 'Add Product' : 'Edit Product'}</Typography>
                 </Stack>
                 <FormControl error={!!errors.title}>
                     <TextField
@@ -75,8 +79,21 @@ const ProductForm = ({ product, mode, categories, setShowForm }: { product: IPro
                         {...register("price", { valueAsNumber: true })}
                     />
                     {errors.price && <p className="text-red-500 text-xs mt-1">{errors.price.message}</p>}
-                </FormControl>
-                <FormControl error={!!errors.thumbnail}>
+            </FormControl>
+            <FormControl error={!!errors.stock}>
+                <label htmlFor="stock" className="text-sm font-medium text-gray-700">
+                    Stock
+                </label>
+                <input
+                    id="stock"
+                    type="number"
+                    step="1"
+                    className={`w-full mt-1 p-4 border border-gray-300 rounded-sm focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500 ${errors.stock ? 'border-red-500 focus:border-red-500 focus:ring-red-500' : ''}`}
+                {...register("stock", { valueAsNumber: true })} 
+                />
+                {errors.stock && <p className="text-red-500 text-xs mt-1">{errors.stock.message}</p>}
+            </FormControl>
+                <FormControl error={!!errors.thumbnail} className="md:col-span-2">
                     <TextField
                         id="thumbnail"
                         label="Thumbnail"
@@ -86,44 +103,33 @@ const ProductForm = ({ product, mode, categories, setShowForm }: { product: IPro
                     />
                 </FormControl>
                 {
-                    !getValues("thumbnail") || errors.thumbnail ?
-                        <div className="flex items-center justify-center bg-gray-100 w-full rounded-lg min-h-[240px]">
+                    !watch("thumbnail") || errors.thumbnail ?
+                        <div className="flex items-center justify-center bg-gray-100 w-full rounded-lg min-h-[240px] md:col-span-2">
                             <p className="text-gray-400">Thumbnail Preview</p>
                         </div>
-                        : <div className="flex items-center justify-center">
-                            <img src={getValues("thumbnail") ?? ""} alt="thumbnail" className="w-full h-[240px] object-cover object-center" />
+                        : <div className="flex items-center justify-center h-[240px] md:col-span-2">
+                            <img src={watch("thumbnail") ?? ""} alt="thumbnail" className="w-full h-[240px] object-cover object-center" />
                         </div>
                 }
-                <FormControl error={!!errors.category}>
-                    <InputLabel id="category-label" className="bg-white !px-2">Category</InputLabel>
+                <FormControl error={!!errors.category} className="md:col-span-2">
+                    <InputLabel id="category-label" className="bg-slate-100 !px-2">Category</InputLabel>
                     <Select
                         id="category"
                         labelId="category-label"
                         {...register("category")}
                         defaultValue={product?.category ?? ""}
                     >
-                        {categories.map((category, index) => (
+                        { categories && categories.map((category, index) => (
                             <MenuItem key={index} value={category}>
                                 {category.charAt(0).toUpperCase() + category.slice(1)}
                             </MenuItem>
                         ))}
                     </Select>
                 </FormControl>
-                <FormControl error={!!errors.stock}>
-                    <TextField
-                        error={!!errors.stock}
-                        helperText={errors.stock?.message}
-                        id="stock"
-                        label="Stock"
-                        type="number"
-                        {...register('stock')}
-                    />
-                </FormControl>
-                <Button type="submit" variant="contained" color="primary" disabled={isSubmitting}>
+                <Button className="md:col-span-2" type="submit" variant="contained" color="primary" disabled={isSubmitting}>
                     {mode === 'add' ? 'Add Product' : 'Save Product'}
                 </Button>
             </form>
-        </div>
     )
 }
 

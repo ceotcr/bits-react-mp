@@ -12,10 +12,8 @@ const Confirmation = ({
     handleClose,
     handleYes,
     handleNo,
-    error,
     isLoading
 }: {
-    error?: string,
     isLoading?: boolean,
     title: string,
     description?: string,
@@ -40,9 +38,6 @@ const Confirmation = ({
             </DialogTitle>
             <DialogContent>
                 <DialogContentText id="alert-dialog-description">
-                    {
-                        error && <div className="text-red-500">{error}</div>
-                    }
                     {
                         description && <div>{description}</div>
                     }

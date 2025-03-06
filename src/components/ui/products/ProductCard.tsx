@@ -1,9 +1,10 @@
 import { Card, CardActions, CardContent, CardMedia, Typography, IconButton, Stack } from "@mui/material"
 import { IProduct } from "../../../libs/types"
-import { Link } from "react-router"
+import { Link, useNavigate } from "react-router"
 import { MdDelete, MdEdit } from "react-icons/md"
 
-const ProductCard = ({ product, onEdit, onDelete }: { product: IProduct, onEdit: () => void, onDelete: () => void }) => {
+const ProductCard = ({ product, onDelete }: { product: IProduct, onDelete: () => void }) => {
+    const navigate = useNavigate()
     return (
         <Card className="relative">
             <Link to={`/products/${product.id}`}>
@@ -38,7 +39,9 @@ const ProductCard = ({ product, onEdit, onDelete }: { product: IProduct, onEdit:
                 </CardContent>
             </Link>
             <CardActions className="absolute top-0 right-0 gap-1">
-                <IconButton aria-label="edit" onClick={onEdit} className="!bg-blue-500 hover:!bg-blue-600">
+                <IconButton aria-label="edit" onClick={
+                    () => navigate(`/products/edit/${product.id}`)
+                } className="!bg-blue-500 hover:!bg-blue-600">
                     <MdEdit className="text-white" />
                 </IconButton>
                 <IconButton aria-label="delete" onClick={onDelete} className="!bg-red-500 hover:!bg-red-600">

@@ -8,7 +8,6 @@ import { Pagination } from "@mui/material";
 import Filters from "../ui/products/Filters";
 import { filterReducer } from "../../libs/reducers/productFilter";
 import ProductCard from "../ui/products/ProductCard";
-import ProductForm from "../ui/products/ProductForm";
 import Confirmation from "../base/Confirmation";
 
 const initialFilters = {
@@ -23,13 +22,12 @@ const Products = () => {
     const { showSnackbar } = useSnackbar();
     const { products, setProducts, pages, removeProduct } = useProducts()
     const [filters, filterDispatch] = useReducer(filterReducer, initialFilters);
-    const [showForm, setShowForm] = useState(false);
-    const [editProduct, setEditProduct] = useState<IProduct | null>(null);
 
     const { data: categories } = useQuery({
         queryKey: ["categories"],
         queryFn: getCategories,
-        refetchOnWindowFocus: false
+        refetchOnWindowFocus: false,
+        refetchOnMount: false,
     })
 
     const { isLoading, isError, error } = useQuery<IProduct[]>({
@@ -41,6 +39,7 @@ const Products = () => {
         },
         refetchOnWindowFocus: false,
         retry: 1,
+        refetchOnMount: false,
     });
     const [confirmDelete, setConfirmDelete] = useState({
         show: false,
@@ -49,7 +48,6 @@ const Products = () => {
     const {
         mutate: deleteProduct,
         isPending: isDeleting,
-        error: deleteError
     } = useMutation({
         mutationFn: async (id: number) => {
             const res = await deleteProductAPI(id);
@@ -65,6 +63,10 @@ const Products = () => {
         },
         onError: () => {
             showSnackbar({ message: "Failed to delete product", severity: "error" });
+            setConfirmDelete({
+                show: false,
+                id: 0
+            })
         },
         retry: 1
     })
@@ -89,11 +91,7 @@ const Products = () => {
 
     return (
         <div className="w-full h-full flex flex-col gap-4">
-            <Filters categories={categories || []} filters={filters} dispatch={filterDispatch} onAdd={() => {
-                setEditProduct(null);
-                setShowForm(true);
-                filterDispatch({ type: "RESET", payload: "" });
-            }} />
+            <Filters categories={categories || []} filters={filters} dispatch={filterDispatch} />
             {isLoading && <div>Loading...</div>}
             {isError && <div>{error.name}: {error.message}</div>}
             {products && (
@@ -101,10 +99,7 @@ const Products = () => {
                     <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 pb-20">
                         {
                             products.map((product) => (
-                                <ProductCard key={product.id} product={product} onEdit={() => {
-                                    setEditProduct(product);
-                                    setShowForm(true);
-                                }} onDelete={() => {
+                                <ProductCard key={product.id} product={product} onDelete={() => {
                                     setConfirmDelete({
                                         show: true,
                                         id: product.id
@@ -117,13 +112,8 @@ const Products = () => {
                 </>
             )}
             {
-                showForm &&
-                <ProductForm product={editProduct} mode={editProduct ? "edit" : "add"} categories={categories || []} setShowForm={setShowForm} />
-            }
-            {
                 confirmDelete.show &&
                 <Confirmation title="Delete Product" description={`Are you sure you want to delete the product "${products.find((product) => product.id === confirmDelete.id)?.title}" ?`}
-                    error={deleteError?.message}
                     isLoading={isDeleting}
                     open={confirmDelete.show}
                     handleClose={handleDialogClose}
