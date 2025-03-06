@@ -44,6 +44,10 @@ const Cart = () => {
         },
         onError: () => {
             showSnackbar({ message: "Something went wrong", severity: "error" })
+            setDeleteDialogue({
+                show: false,
+                id: 0
+            })
         }
     })
     return (

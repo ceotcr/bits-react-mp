@@ -17,7 +17,7 @@ const EditProduct = () => {
             {
                 isLoading ? <div>Loading...</div> :
                     error ? <div>{error.name}: {error.message}</div> :
-                        product ? <ProductForm mode="edit" categories={[]} setShowForm={() => { }} product={product} /> : <div>Product not found</div>
+                        product ? <ProductForm mode="edit" product={product} /> : <div>Product not found</div>
             }
         </>
     )
