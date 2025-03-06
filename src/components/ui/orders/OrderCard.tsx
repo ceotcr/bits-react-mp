@@ -33,9 +33,7 @@ const OrderCard = ({ order, onDelete, isCart, onProcessStatusChange }: {
                     }
                 </Stack>
                 <Typography variant="body2" className="!text-gray-800">
-                    User ID: {order.userId}
-                    <br />
-                    Total Items: {order.totalProducts} | Total Quantity: {order.totalQuantity}
+                    User #{order.userId} | Total Items: {order.totalProducts} | Total Quantity: {order.totalQuantity}
                 </Typography>
                 <Box className="!mt-4 h-[300px] overflow-y-auto">
                     {order.products.map((product) => (
