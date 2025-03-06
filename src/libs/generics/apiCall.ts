@@ -1,4 +1,3 @@
-import { AxiosHeaders } from "axios"
 import { AxiosInstance } from "../AxiosInstance"
 
 export const callApi = async <S, T>(
@@ -9,9 +8,9 @@ export const callApi = async <S, T>(
         headers
     }: {
         url: string,
-        method: "GET" | "POST" | "PUT" | "DELETE",
+        method: "GET" | "POST" | "PUT" | "DELETE" | "PATCH",
         data: S,
-        headers?: AxiosHeaders
+        headers?: { [key: string]: string }
     }
 ): Promise<T> => {
     const response = await AxiosInstance({
