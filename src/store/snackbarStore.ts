@@ -21,6 +21,11 @@ export const useSnackbar = create<SnackbarStore>((set) => ({
     message: "",
     isShowing: false,
     severity: "info",
-    showSnackbar: ({ message, severity }) => set({ message, severity, isShowing: true }),
+    showSnackbar: ({ message, severity }) => {
+        set({ message, severity, isShowing: true })
+        setTimeout(() => {
+            set({ message: "", isShowing: false })
+        }, 3000)
+    },
     hideSnackbar: () => set({ message: "", isShowing: false }),
 }));

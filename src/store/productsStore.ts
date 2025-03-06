@@ -12,7 +12,7 @@ export const useProducts = create<IProductStore>((set) => ({
     products: [],
     pages: 0,
     setProducts: ({ products, pages }) => set({ products, pages }),
-    addProduct: (product) => set((state) => ({ products: [...state.products, product] })),
+    addProduct: (product) => set((state) => ({ products: [product, ...state.products.slice(0, state.products.length - 1)] })), // remove last product
     removeProduct: (id) => set((state) => ({ products: state.products.filter((product) => product.id !== id) })),
     updateProduct: (product) => set((state) => ({ products: state.products.map((p) => p.id === product.id ? product : p) })),
 }));

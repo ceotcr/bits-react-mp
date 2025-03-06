@@ -1,28 +1,22 @@
 import { Stack, TextField, FormControl, InputLabel, Select, MenuItem, IconButton } from '@mui/material'
-import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
-import { getCategories } from '../../../libs/apicalls/products';
 import { MdAdd } from 'react-icons/md';
 
-const Filters = ({ filters, dispatch }: {
+const Filters = ({ filters, dispatch, categories, onAdd }: {
     filters: {
         search: string;
         sortBy: string;
         order: string;
         category: string;
     },
+    categories: string[],
     dispatch: React.Dispatch<{ type: string, payload: string }>
+    onAdd: () => void
 }) => {
     const [search, setSearch] = useState(filters.search)
 
-    const { data: categories } = useQuery({
-        queryKey: ["categories"],
-        queryFn: getCategories,
-        refetchOnWindowFocus: false
-    })
-
     return (
-        <Stack direction="row" spacing={2} className='max-sm:flex-wrap max-sm:gap-y-2'>
+        <Stack direction="row" className='max-sm:flex-wrap-reverse max-sm:gap-y-2 !space-0 !gap-2 !gap-y-4'>
             <TextField
                 slotProps={
                     {
@@ -44,32 +38,6 @@ const Filters = ({ filters, dispatch }: {
                 helperText="Press Enter to search"
             />
             <FormControl className="w-[160px]">
-                <InputLabel className="bg-slate-100 !px-2" id="Sort By">Sort By</InputLabel>
-                <Select
-                    className="!rounded-lg"
-                    labelId="Sort By"
-                    value={filters.sortBy}
-                    onChange={(e) => dispatch({ type: "SET_SORT_BY", payload: e.target.value })}
-                >
-                    <MenuItem value={"default"}>Default</MenuItem>
-                    <MenuItem value={"title"}>Title</MenuItem>
-                    <MenuItem value={"price"}>Price</MenuItem>
-                    <MenuItem value={"rating"}>Rating</MenuItem>
-                </Select>
-            </FormControl>
-            <FormControl className="w-[160px]">
-                <InputLabel className="bg-slate-100 !px-2" id="order">Order</InputLabel>
-                <Select
-                    className="!rounded-lg"
-                    labelId="order"
-                    value={filters.order}
-                    onChange={(e) => dispatch({ type: "SET_ORDER", payload: e.target.value })}
-                >
-                    <MenuItem value={"asc"}>Ascending</MenuItem>
-                    <MenuItem value={"desc"}>Descending</MenuItem>
-                </Select>
-            </FormControl>
-            <FormControl className="w-[160px]">
                 <InputLabel className="bg-slate-100 !px-2" id="Category">Category</InputLabel>
                 <Select
                     className="!rounded-lg"
@@ -86,7 +54,35 @@ const Filters = ({ filters, dispatch }: {
                     ))}
                 </Select>
             </FormControl>
-            <IconButton aria-label="add" className='h-fit !bg-blue-400 hover:!bg-blue-500 !text-white !mt-2' >
+            <Stack direction="row" className=' !space-0 !gap-2'>
+                <FormControl className="w-[160px]">
+                    <InputLabel className="bg-slate-100 !px-2" id="Sort By">Sort By</InputLabel>
+                    <Select
+                        className="!rounded-lg"
+                        labelId="Sort By"
+                        value={filters.sortBy}
+                        onChange={(e) => dispatch({ type: "SET_SORT_BY", payload: e.target.value })}
+                    >
+                        <MenuItem value={"default"}>Default</MenuItem>
+                        <MenuItem value={"title"}>Title</MenuItem>
+                        <MenuItem value={"price"}>Price</MenuItem>
+                        <MenuItem value={"rating"}>Rating</MenuItem>
+                    </Select>
+                </FormControl>
+                <FormControl className="w-[160px]">
+                    <InputLabel className="bg-slate-100 !px-2" id="order">Order</InputLabel>
+                    <Select
+                        className="!rounded-lg"
+                        labelId="order"
+                        value={filters.order}
+                        onChange={(e) => dispatch({ type: "SET_ORDER", payload: e.target.value })}
+                    >
+                        <MenuItem value={"asc"}>Ascending</MenuItem>
+                        <MenuItem value={"desc"}>Descending</MenuItem>
+                    </Select>
+                </FormControl>
+            </Stack>
+            <IconButton aria-label="add" className='h-fit !bg-blue-400 hover:!bg-blue-500 !text-white !mt-2' onClick={onAdd} >
                 <MdAdd size={24} />
             </IconButton>
         </Stack >

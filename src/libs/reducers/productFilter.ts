@@ -25,6 +25,8 @@ export const filterReducer = (state: IFilterState, action: IFilterAction) => {
             return { ...state, category: action.payload, search: "" };
         case "SET_PAGE":
             return { ...state, page: Number(action.payload) };
+        case "RESET":
+            return { ...state, search: "", sortBy: "default", order: "asc", category: "all", page: 1 };
         default:
             return state;
     }

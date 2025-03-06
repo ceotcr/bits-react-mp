@@ -1,12 +1,15 @@
-import { useReducer } from "react";
-import { useQuery } from "@tanstack/react-query";
-import { getProducts } from "../../libs/apicalls/products";
+import { useCallback, useReducer, useState } from "react";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { deleteProductAPI, getCategories, getProducts } from "../../libs/apicalls/products";
 import { IProduct } from "../../libs/types";
 import { useSnackbar } from "../../store/snackbarStore";
 import { useProducts } from "../../store/productsStore";
 import { Pagination } from "@mui/material";
 import Filters from "../ui/products/Filters";
 import { filterReducer } from "../../libs/reducers/productFilter";
+import ProductCard from "../ui/products/ProductCard";
+import ProductForm from "../ui/products/ProductForm";
+import Confirmation from "../base/Confirmation";
 
 const initialFilters = {
     search: "",
@@ -18,41 +21,116 @@ const initialFilters = {
 
 const Products = () => {
     const { showSnackbar } = useSnackbar();
-    const { products, setProducts, pages } = useProducts()
-    const [filters, dispatch] = useReducer(filterReducer, initialFilters);
+    const { products, setProducts, pages, removeProduct } = useProducts()
+    const [filters, filterDispatch] = useReducer(filterReducer, initialFilters);
+    const [showForm, setShowForm] = useState(false);
+    const [editProduct, setEditProduct] = useState<IProduct | null>(null);
+
+    const { data: categories } = useQuery({
+        queryKey: ["categories"],
+        queryFn: getCategories,
+        refetchOnWindowFocus: false
+    })
 
     const { isLoading, isError, error } = useQuery<IProduct[]>({
         queryKey: ["products", filters],
         queryFn: async () => {
             const data = await getProducts(filters);
-            showSnackbar({ message: "Products loaded", severity: "success" });
             setProducts({ products: data.products, pages: data.pages });
             return data.products;
         },
         refetchOnWindowFocus: false,
         retry: 1,
     });
+    const [confirmDelete, setConfirmDelete] = useState({
+        show: false,
+        id: 0
+    });
+    const {
+        mutate: deleteProduct,
+        isPending: isDeleting,
+        error: deleteError
+    } = useMutation({
+        mutationFn: async (id: number) => {
+            const res = await deleteProductAPI(id);
+            return res;
+        },
+        onSuccess: (data) => {
+            removeProduct(data.id)
+            showSnackbar({ message: "Product deleted successfully", severity: "success" });
+            setConfirmDelete({
+                show: false,
+                id: 0
+            })
+        },
+        onError: () => {
+            showSnackbar({ message: "Failed to delete product", severity: "error" });
+        },
+        retry: 1
+    })
 
-    if (isError) return <div>{error.name}: {error.message}</div>;
+    const handleDialogClose = useCallback(() => {
+        setConfirmDelete({
+            show: false,
+            id: 0
+        })
+    }, [])
+
+    const handleDialogYes = useCallback(() => {
+        deleteProduct(confirmDelete.id);
+    }, [confirmDelete.id, deleteProduct])
+
+    const handleDialogNo = useCallback(() => {
+        setConfirmDelete({
+            show: false,
+            id: 0
+        })
+    }, [])
 
     return (
         <div className="w-full h-full flex flex-col gap-4">
-            <Filters filters={filters} dispatch={dispatch} />
+            <Filters categories={categories || []} filters={filters} dispatch={filterDispatch} onAdd={() => {
+                setEditProduct(null);
+                setShowForm(true);
+                filterDispatch({ type: "RESET", payload: "" });
+            }} />
             {isLoading && <div>Loading...</div>}
+            {isError && <div>{error.name}: {error.message}</div>}
             {products && (
                 <>
                     <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 pb-20">
-                        {products.map((product) => (
-                            <div key={product.id}>
-                                <h3>{product.title}</h3>
-                                <p>{product.description}</p>
-                                <p>{product.price}</p>
-                            </div>
-                        ))}
+                        {
+                            products.map((product) => (
+                                <ProductCard key={product.id} product={product} onEdit={() => {
+                                    setEditProduct(product);
+                                    setShowForm(true);
+                                }} onDelete={() => {
+                                    setConfirmDelete({
+                                        show: true,
+                                        id: product.id
+                                    })
+                                }} />
+                            ))
+                        }
                     </div>
-                    <Pagination className="fixed bottom-4 bg-white p-2 rounded-lg right-4" count={pages} shape="rounded" page={filters.page} onChange={(_e, value) => dispatch({ type: "SET_PAGE", payload: String(value) })} />
+                    <Pagination className="fixed bottom-4 bg-white p-2 rounded-lg right-4" count={pages} shape="rounded" page={filters.page} onChange={(_e, value) => filterDispatch({ type: "SET_PAGE", payload: String(value) })} />
                 </>
             )}
+            {
+                showForm &&
+                <ProductForm product={editProduct} mode={editProduct ? "edit" : "add"} categories={categories || []} setShowForm={setShowForm} />
+            }
+            {
+                confirmDelete.show &&
+                <Confirmation title="Delete Product" description={`Are you sure you want to delete the product "${products.find((product) => product.id === confirmDelete.id)?.title}" ?`}
+                    error={deleteError?.message}
+                    isLoading={isDeleting}
+                    open={confirmDelete.show}
+                    handleClose={handleDialogClose}
+                    handleYes={handleDialogYes}
+                    handleNo={handleDialogNo}
+                />
+            }
         </div>
     );
 };

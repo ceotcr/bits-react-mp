@@ -1,4 +1,5 @@
 import { callApi } from "../generics/apiCall"
+import { TProductFormSchema } from "../schemas/productForm"
 import { IProduct } from "../types"
 
 export const getProducts = async ({ limit = 12, page = 1, sortBy = "default", order = "asc", search = "", category = "all" }: { limit?: number, page?: number, sortBy?: string, order?: string, category?: string, search?: string }) => {
@@ -34,6 +35,33 @@ export const getCategories = async () => {
         url: "/products/category-list",
         method: "GET",
         data: null,
+    })
+    return response
+}
+
+export const addProductAPI = async (product: TProductFormSchema) => {
+    const response = await callApi<TProductFormSchema, IProduct>({
+        url: "/products",
+        method: "POST",
+        data: product,
+    })
+    return response
+}
+
+export const updateProductAPI = async (product: TProductFormSchema, id: number) => {
+    const response = await callApi<TProductFormSchema, IProduct>({
+        url: `/products/${id}`,
+        method: "PUT",
+        data: product,
+    })
+    return response
+}
+
+export const deleteProductAPI = async (id: number) => {
+    const response = await callApi<undefined, IProduct>({
+        url: `/products/${id}`,
+        method: "DELETE",
+        data: undefined
     })
     return response
 }
