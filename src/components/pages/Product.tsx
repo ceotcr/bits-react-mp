@@ -29,7 +29,7 @@ const Product = () => {
     if (!product) return <div>Product not found</div>
     return (
         <div className="grid grid-cols-1 md:grid-cols-2 w-full mx-auto rounded-lg gap-4 p-4">
-            <div className="w-full flex flex-col gap-4 md:sticky top-0">
+            <div className="w-full flex flex-col gap-4 md:!sticky !top-0 h-fit">
                 <div className="w-full">
                     <img src={product.images[selectedImage]} alt={product.title} className="w-full h-96 object-center object-cover rounded-lg" />
                 </div>
@@ -81,8 +81,21 @@ const Product = () => {
                         </Button>
                     )
                 }
-                <Stack direction="column">
-                    <Accordion disableGutters className="!shadow-none">
+
+                <Typography variant="h6" color="initial">
+                    Specifications
+                </Typography>
+                <Stack direction="row" gap={2}>
+                    <Typography variant="body1" color="initial">
+                        Dimensions: {product.dimensions.height} x {product.dimensions.width} x {product.dimensions.depth}
+                    </Typography>
+                    <Typography variant="body1" color="initial">
+                        Weight: {product.weight} Units
+                    </Typography>
+
+                </Stack>
+                <Stack direction="column" gap={1}>
+                    <Accordion disableGutters className="!shadow-none !border-none !outline-none">
                         <AccordionSummary expandIcon={
                             <MdArrowDropDown />
                         }>
@@ -96,7 +109,7 @@ const Product = () => {
                             </Typography>
                         </AccordionDetails>
                     </Accordion>
-                    <Accordion disableGutters className="!shadow-none">
+                    <Accordion disableGutters className="!shadow-none !border-none !outline-none">
                         <AccordionSummary expandIcon={
                             <MdArrowDropDown />
                         }>
@@ -110,7 +123,7 @@ const Product = () => {
                             </Typography>
                         </AccordionDetails>
                     </Accordion>
-                    <Accordion disableGutters className="!shadow-none">
+                    <Accordion disableGutters className="!shadow-none !border-none !outline-none">
                         <AccordionSummary expandIcon={
                             <MdArrowDropDown />
                         }>
