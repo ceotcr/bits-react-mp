@@ -1,7 +1,7 @@
 import { Card, CardActions, CardContent, CardMedia, Typography, IconButton, Stack } from "@mui/material"
 import { IProduct } from "../../../libs/types"
 import { Link, useNavigate } from "react-router"
-import { MdDelete, MdEdit } from "react-icons/md"
+import { MdDangerous, MdDelete, MdEdit, MdWarning } from "react-icons/md"
 
 const ProductCard = ({ product, onDelete }: { product: IProduct, onDelete: () => void }) => {
     const navigate = useNavigate()
@@ -29,11 +29,15 @@ const ProductCard = ({ product, onDelete }: { product: IProduct, onDelete: () =>
                             $ {product.price}
                         </Typography>
                         {
-                            product.stock === 0 ? <Typography variant="body2" mt={1} sx={{ color: 'red' }}>
-                                Out of stock
-                            </Typography> : product.stock < 10 ? <Typography p={1} width={"fit-content"} variant="body2" mt={1} sx={{ color: 'red' }}>
-                                Low stock
-                            </Typography> : null
+                            product.availabilityStatus === 'Low Stock' ?
+                                <Typography variant="body2" mt={1} className="!text-yellow-500 flex items-center gap-1">
+                                    <MdWarning /> {product.availabilityStatus} ({product.stock})
+                                </Typography>
+                                :
+                                product.availabilityStatus === 'Out of Stock' &&
+                                <Typography variant="body2" mt={1} className="!text-red-500 flex items-center gap-1">
+                                    <MdDangerous /> {product.availabilityStatus}
+                                </Typography>
                         }
                     </Stack>
                 </CardContent>
