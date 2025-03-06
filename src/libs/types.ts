@@ -49,3 +49,29 @@ export interface IProduct {
     images: string[];
     thumbnail: string;
 }
+
+
+export interface IOrder {
+    id: number;
+    products: IOrderProduct[];
+    total: number;
+    discountedTotal: number;
+    userId: number;
+    totalProducts: number;
+    totalQuantity: number;
+    isProcessed: boolean;
+}
+export interface IOrderProduct {
+    id: number;
+    title: string;
+    price: number;
+    quantity: number;
+    total: number;
+    discountPercentage: number;
+    discountedTotal: number;
+    thumbnail: string;
+}
+
+export interface ICartItem extends IProduct {
+    quantity: number;
+}

@@ -2,9 +2,12 @@ import { Card, CardActions, CardContent, CardMedia, Typography, IconButton, Stac
 import { IProduct } from "../../../libs/types"
 import { Link, useNavigate } from "react-router"
 import { MdDangerous, MdDelete, MdEdit, MdWarning } from "react-icons/md"
+import { IoBagAddSharp } from "react-icons/io5"
+import { useCartStore } from "../../../store/cartStore"
 
 const ProductCard = ({ product, onDelete }: { product: IProduct, onDelete: () => void }) => {
     const navigate = useNavigate()
+    const { addProduct } = useCartStore()
     return (
         <Card className="relative">
             <Link to={`/products/${product.id}`}>
@@ -42,7 +45,7 @@ const ProductCard = ({ product, onDelete }: { product: IProduct, onDelete: () =>
                     </Stack>
                 </CardContent>
             </Link>
-            <CardActions className="absolute top-0 right-0 gap-1">
+            <CardActions className="absolute top-0 w-full gap-1 flex items-center left-0 right-0">
                 <IconButton aria-label="edit" onClick={
                     () => navigate(`/products/edit/${product.id}`)
                 } className="!bg-blue-500 hover:!bg-blue-600">
@@ -50,6 +53,9 @@ const ProductCard = ({ product, onDelete }: { product: IProduct, onDelete: () =>
                 </IconButton>
                 <IconButton aria-label="delete" onClick={onDelete} className="!bg-red-500 hover:!bg-red-600">
                     <MdDelete className="text-white" />
+                </IconButton>
+                <IconButton aria-label="add to cart" className="!bg-green-500 !rounded-lg hover:!bg-green-600 !ml-auto" onClick={() => addProduct(product)}>
+                    <IoBagAddSharp className="text-white" />
                 </IconButton>
             </CardActions>
         </Card >
