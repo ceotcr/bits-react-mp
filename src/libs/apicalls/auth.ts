@@ -22,7 +22,6 @@ export const getAuthUser = async (token: string) => {
         headers: {
             "Authorization": `Bearer ${token}`
         },
-        data: null,
     })
     return response
 }

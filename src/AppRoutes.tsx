@@ -10,6 +10,8 @@ import AddToCart from "./components/pages/AddToCart"
 import Orders from "./components/pages/Orders"
 import Users from "./components/pages/Users"
 import User from "./components/pages/User"
+import Blogs from "./components/pages/Blogs"
+import Blog from "./components/pages/Blog"
 
 const AppRoutes = () => {
     return (
@@ -25,6 +27,8 @@ const AppRoutes = () => {
                 <Route path="/orders" element={<Orders />} />
                 <Route path="/users" element={<Users />} />
                 <Route path="/users/:id" element={<User />} />
+                <Route path="/blogs" element={<Blogs />} />
+                <Route path="/blogs/:id" element={<Blog />} />
             </Route>
             <Route path="/login" element={<Login />} />
         </Routes>

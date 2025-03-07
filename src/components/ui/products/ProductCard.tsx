@@ -7,7 +7,7 @@ import { useCartStore } from "../../../store/cartStore"
 
 const ProductCard = ({ product, onDelete }: { product: IProduct, onDelete: () => void }) => {
     const navigate = useNavigate()
-    const { addProduct } = useCartStore()
+    const { addProduct, cart } = useCartStore()
     return (
         <Card className="relative">
             <Link to={`/products/${product.id}`}>
@@ -54,9 +54,12 @@ const ProductCard = ({ product, onDelete }: { product: IProduct, onDelete: () =>
                 <IconButton aria-label="delete" onClick={onDelete} className="!bg-red-500 hover:!bg-red-600">
                     <MdDelete className="text-white" />
                 </IconButton>
-                <IconButton aria-label="add to cart" className="!bg-green-500 !rounded-lg hover:!bg-green-600 !ml-auto" onClick={() => addProduct(product)}>
-                    <IoBagAddSharp className="text-white" />
-                </IconButton>
+                {
+                    (product.stock > 0 && (cart.find((item) => item.id === product.id)?.quantity ?? 0) < product.stock) &&
+                    <IconButton aria-label="add to cart" className="!bg-green-500 !rounded-lg hover:!bg-green-600 !ml-auto" onClick={() => addProduct(product)}>
+                        <IoBagAddSharp className="text-white" />
+                    </IconButton>
+                }
             </CardActions>
         </Card >
     )

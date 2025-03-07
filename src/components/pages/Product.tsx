@@ -8,11 +8,12 @@ import { MdArrowDropDown, MdCheck, MdClose, MdDangerous, MdWarning } from "react
 import Accordion from '@mui/material/Accordion';
 import AccordionDetails from '@mui/material/AccordionDetails';
 import AccordionSummary from '@mui/material/AccordionSummary';
+import { useCartStore } from "../../store/cartStore"
 
 const Product = () => {
     const params = useParams<{ id: string }>()
     const id = params.id as string
-
+    const { cart, addProduct } = useCartStore()
     const { data: product, isLoading, error } = useQuery<IProduct>({
         queryKey: ['product', id],
         queryFn: async () => {
@@ -72,14 +73,16 @@ const Product = () => {
                     ))}
                 </Stack>
                 {
-                    product.stock > 0 ? (
-                        <Button variant="contained" color="primary">
-                            Add to Cart
-                        </Button>) : (
-                        <Button variant="contained" color="error" disabled>
-                            Out of Stock
-                        </Button>
-                    )
+                    product.stock > 0 &&
+                        ((cart.find((item) => item.id === product.id)?.quantity ?? 0) < product.stock)
+                        ? (
+                            <Button variant="contained" color="primary" onClick={() => addProduct(product)}>
+                                Add to Cart
+                            </Button>) : (
+                            <Button variant="contained" color="error" disabled>
+                                {product.availabilityStatus === 'Out of Stock' ? 'Out of Stock' : 'Max Quantity Reached'}
+                            </Button>
+                        )
                 }
 
                 <Typography variant="h6" color="initial">

@@ -20,7 +20,6 @@ export const getAllOrders = async ({
     }>({
         url,
         method: "GET",
-        data: undefined,
     })
     return {
         ...response,
@@ -45,7 +44,6 @@ export const deleteOrder = async (cartId: number) => {
     const response = await callApi<undefined, IOrder>({
         url: `/carts/${cartId}`,
         method: "DELETE",
-        data: undefined
     })
     return response;
 }

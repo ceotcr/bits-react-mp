@@ -10,10 +10,9 @@ export const getProducts = async ({ limit = 12, page = 1, sortBy = "default", or
     if (!search) url += `?limit=${limit}`
     if (skip) url += `&skip=${skip}`
     if (sortBy && sortBy !== "default") url += `&sortBy=${sortBy}&order=${order}`
-    const response = await callApi<null, { products: IProduct[], total: number }>({
+    const response = await callApi<undefined, { products: IProduct[], total: number }>({
         url,
         method: "GET",
-        data: null,
     })
     return {
         products: response.products,
@@ -22,19 +21,17 @@ export const getProducts = async ({ limit = 12, page = 1, sortBy = "default", or
 }
 
 export const getProduct = async (id: string) => {
-    const response = await callApi<null, IProduct>({
+    const response = await callApi<undefined, IProduct>({
         url: `/products/${id}`,
         method: "GET",
-        data: null,
     })
     return response
 }
 
 export const getCategories = async () => {
-    const response = await callApi<null, string[]>({
+    const response = await callApi<undefined, string[]>({
         url: "/products/category-list",
         method: "GET",
-        data: null,
     })
     return response
 }
@@ -61,7 +58,6 @@ export const deleteProductAPI = async (id: number) => {
     const response = await callApi<undefined, IProduct>({
         url: `/products/${id}`,
         method: "DELETE",
-        data: undefined
     })
     return response
 }

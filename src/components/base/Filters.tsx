@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { MdAdd } from 'react-icons/md';
 import { useNavigate } from 'react-router';
 
-const Filters = ({ filters, dispatch, categories }: {
+const Filters = ({ filters, dispatch, categories, sortBy, isProductsPage }: {
     filters: {
         search: string;
         sortBy: string;
@@ -11,6 +11,8 @@ const Filters = ({ filters, dispatch, categories }: {
         category: string;
     },
     categories: string[],
+    isProductsPage?: boolean,
+    sortBy: string[],
     dispatch: React.Dispatch<{ type: string, payload: string }>
 }) => {
     const [search, setSearch] = useState(filters.search)
@@ -37,23 +39,28 @@ const Filters = ({ filters, dispatch, categories }: {
                 enterKeyHint='search'
                 helperText="Press Enter to search"
             />
-            <FormControl className="w-[160px]">
-                <InputLabel className="bg-slate-100 !px-2" id="Category">Category</InputLabel>
-                <Select
-                    className="!rounded-lg"
-                    labelId="Category"
-                    value={filters.category}
-                    onChange={(e) => {
-                        dispatch({ type: "SET_CATEGORY", payload: e.target.value })
-                        setSearch("")
-                    }}
-                >
-                    <MenuItem value={"all"}>All</MenuItem>
-                    {categories && categories.map((category) => (
-                        <MenuItem key={category} value={category}>{category.charAt(0).toUpperCase() + category.slice(1)}</MenuItem>
-                    ))}
-                </Select>
-            </FormControl>
+            {
+                isProductsPage && (
+
+                    <FormControl className="w-[160px]">
+                        <InputLabel className="bg-slate-100 !px-2" id="Category">Category</InputLabel>
+                        <Select
+                            className="!rounded-lg"
+                            labelId="Category"
+                            value={filters.category}
+                            onChange={(e) => {
+                                dispatch({ type: "SET_CATEGORY", payload: e.target.value })
+                                setSearch("")
+                            }}
+                        >
+                            <MenuItem value={"all"}>All</MenuItem>
+                            {categories && categories.map((category) => (
+                                <MenuItem key={category} value={category}>{category.charAt(0).toUpperCase() + category.slice(1)}</MenuItem>
+                            ))}
+                        </Select>
+                    </FormControl>
+                )
+            }
             <Stack direction="row" className=' !space-0 !gap-2'>
                 <FormControl className="w-[160px]">
                     <InputLabel className="bg-slate-100 !px-2" id="Sort By">Sort By</InputLabel>
@@ -64,9 +71,9 @@ const Filters = ({ filters, dispatch, categories }: {
                         onChange={(e) => dispatch({ type: "SET_SORT_BY", payload: e.target.value })}
                     >
                         <MenuItem value={"default"}>Default</MenuItem>
-                        <MenuItem value={"title"}>Title</MenuItem>
-                        <MenuItem value={"price"}>Price</MenuItem>
-                        <MenuItem value={"rating"}>Rating</MenuItem>
+                        {sortBy && sortBy.map((sort) => (
+                            <MenuItem key={sort} value={sort}>{sort.charAt(0).toUpperCase() + sort.slice(1)}</MenuItem>
+                        ))}
                     </Select>
                 </FormControl>
                 <FormControl className="w-[160px]">

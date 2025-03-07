@@ -9,7 +9,7 @@ export const callApi = async <S, T>(
     }: {
         url: string,
         method: "GET" | "POST" | "PUT" | "DELETE" | "PATCH",
-        data: S,
+        data?: S,
         headers?: { [key: string]: string }
     }
 ): Promise<T> => {

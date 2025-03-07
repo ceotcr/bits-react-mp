@@ -5,7 +5,7 @@ import { IProduct } from "../../libs/types";
 import { useSnackbar } from "../../store/snackbarStore";
 import { useProducts } from "../../store/productsStore";
 import { Pagination } from "@mui/material";
-import Filters from "../ui/products/Filters";
+import Filters from "../base/Filters";
 import { filterReducer } from "../../libs/reducers/productFilter";
 import ProductCard from "../ui/products/ProductCard";
 import Confirmation from "../base/Confirmation";
@@ -91,7 +91,7 @@ const Products = () => {
 
     return (
         <div className="w-full h-full flex flex-col gap-4">
-            <Filters categories={categories || []} filters={filters} dispatch={filterDispatch} />
+            <Filters isProductsPage categories={categories || []} filters={filters} sortBy={["title", "price", "rating"]} dispatch={filterDispatch} />
             {isLoading && <div>Loading...</div>}
             {isError && <div>{error.name}: {error.message}</div>}
             {products && (
