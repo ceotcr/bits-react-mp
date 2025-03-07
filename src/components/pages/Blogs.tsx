@@ -5,6 +5,8 @@ import { useReducer } from "react";
 import { BlogCard } from "../ui/blogs/BlogCard";
 import { filterReducer, initialFilters } from "../../libs/reducers/blogsFilter";
 import { Pagination } from "@mui/material";
+import { useNavigate } from "react-router";
+import { useAuth } from "../../store/authStore";
 
 const Blogs = () => {
     const [filters, filterDispatch] = useReducer(filterReducer, initialFilters
@@ -31,6 +33,13 @@ const Blogs = () => {
         refetchOnWindowFocus: false,
         refetchOnMount: false,
     })
+    const navigate = useNavigate()
+    const { user: authUser } = useAuth()
+
+    if (!authUser || ["admin", "user", "moderator"].includes(authUser.role) === false) {
+        navigate('/login')
+        return null
+    }
     return (
         <div className="w-full h-full flex flex-col gap-4">
             <Filters isBlogs categories={tags || []} filters={filters} sortBy={["title", "views", "likes"]} dispatch={filterDispatch} />

@@ -6,6 +6,7 @@ import { LoginSchema, TLoginSchema } from "../../../libs/schemas/userAuth";
 import { useAuth } from "../../../store/authStore";
 import { login } from "../../../libs/apicalls/auth";
 import { useLocation, useNavigate } from "react-router";
+import { useSnackbar } from "../../../store/snackbarStore";
 
 const LoginForm = () => {
     const { setUser } = useAuth()
@@ -19,14 +20,17 @@ const LoginForm = () => {
     });
     const navigate = useNavigate()
     const location = useLocation()
+    const { showSnackbar } = useSnackbar()
     const { isPending, mutate, isError: isErorOnSubmit, error: submitError } = useMutation({
         mutationFn: login,
         onSuccess: (data) => {
             setUser(data);
             const redirectPath = location.state?.from || "/";
+            showSnackbar({ message: `Logged in as ${data.role}`, severity: "success" });
             navigate(redirectPath);
         },
         onError: () => {
+            showSnackbar({ message: "Failed to login", severity: "error" });
             setUser(null);
         },
         retry: 1

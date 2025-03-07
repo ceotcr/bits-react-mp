@@ -1,4 +1,4 @@
-import { Link, useParams } from "react-router";
+import { Link, useNavigate, useParams } from "react-router";
 import { IBlog, IComment } from "../../libs/types";
 import { useQuery } from "@tanstack/react-query";
 import { getBlog } from "../../libs/apicalls/blogs";
@@ -6,6 +6,7 @@ import { Container, Typography, Box, Chip, Stack, Divider, Avatar, CircularProgr
 import AddCommentForm from "../ui/blogs/CommentForm";
 import { useState } from "react";
 import { MdArrowBack } from "react-icons/md";
+import { useAuth } from "../../store/authStore";
 
 const Blog = () => {
     const { id } = useParams<{ id: string }>();
@@ -19,6 +20,14 @@ const Blog = () => {
         },
         refetchOnWindowFocus: false,
     });
+
+    const navigate = useNavigate()
+    const { user: authUser } = useAuth()
+
+    if (!authUser || ["admin", "user", "moderator"].includes(authUser.role) === false) {
+        navigate('/login')
+        return null
+    }
 
     if (loading) return <Box display="flex" justifyContent="center" mt={4}><CircularProgress /></Box>;
     if (!blog) return <Typography textAlign="center" color="error" mt={4}>Blog not found.</Typography>;

@@ -5,11 +5,12 @@ import { getUsers, updateUser } from '../../libs/apicalls/users';
 import Filters from '../ui/users/UserFilters';
 import { useUsersStore } from '../../store/usersStore';
 import { useQuery, useMutation } from '@tanstack/react-query';
-import { Link } from 'react-router';
+import { Link, useNavigate } from 'react-router';
 import UserEditForm from '../ui/users/UserEditForm';
 import { IAuthRes } from '../../libs/types';
 import { useSnackbar } from '../../store/snackbarStore';
 import { filterReducer, initialFilters } from '../../libs/reducers/usersFilter';
+import { useAuth } from '../../store/authStore';
 
 const Users = () => {
     const { users, setUsers, updateUser: updateStoreUser, pages } = useUsersStore();
@@ -52,6 +53,13 @@ const Users = () => {
         setOpenDialog(true);
     };
 
+    const navigate = useNavigate()
+    const { user: authUser } = useAuth()
+
+    if (!authUser || ["admin", "moderator"].includes(authUser.role) === false) {
+        navigate('/login')
+        return null
+    }
     return (
         <Stack spacing={2} pb={8}>
             <Filters

@@ -1,13 +1,14 @@
 import { Button, Table, TableBody, TableCell, TableRow, TextField, Typography } from "@mui/material"
 import { useCartStore } from "../../store/cartStore"
 import CartItem from "../ui/cart/CartItem"
-import { Link } from "react-router"
+import { Link, useNavigate } from "react-router"
 import { useMemo, useState } from "react"
 import { useMutation } from "@tanstack/react-query"
 import { createOrder } from "../../libs/apicalls/orders"
 import { useSnackbar } from "../../store/snackbarStore"
 import { useOrders } from "../../store/ordersStore"
 import { MdArrowBack } from "react-icons/md"
+import { useAuth } from "../../store/authStore"
 
 const AddToCart = () => {
     const { cart, clearCart } = useCartStore()
@@ -32,6 +33,13 @@ const AddToCart = () => {
             showSnackbar({ message: error.message, severity: "error" })
         }
     })
+    const navigate = useNavigate()
+    const { user: authUser } = useAuth()
+
+    if (!authUser || ["admin"].includes(authUser.role) === false) {
+        navigate('/login')
+        return null
+    }
     return (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="flex flex-col gap-4">

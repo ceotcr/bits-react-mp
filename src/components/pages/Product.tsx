@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query"
-import { Link, useParams } from "react-router"
+import { Link, useNavigate, useParams } from "react-router"
 import { getProduct } from "../../libs/apicalls/products"
 import { IProduct } from "../../libs/types"
 import { useEffect, useState } from "react"
@@ -9,6 +9,7 @@ import Accordion from '@mui/material/Accordion';
 import AccordionDetails from '@mui/material/AccordionDetails';
 import AccordionSummary from '@mui/material/AccordionSummary';
 import { useCartStore } from "../../store/cartStore"
+import { useAuth } from "../../store/authStore"
 
 const Product = () => {
     const params = useParams<{ id: string }>()
@@ -25,6 +26,13 @@ const Product = () => {
     useEffect(() => {
         setSelectedImage(0)
     }, [product])
+    const navigate = useNavigate()
+    const { user: authUser } = useAuth()
+
+    if (!authUser || ["admin"].includes(authUser.role) === false) {
+        navigate('/login')
+        return null
+    }
     if (isLoading) return <div>Loading...</div>
     if (error) return <div>{error.name}: {error.message}</div>
     if (!product) return <div>Product not found</div>

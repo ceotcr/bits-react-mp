@@ -7,57 +7,65 @@ import { IoReceipt } from "react-icons/io5"
 import { ImQuotesLeft } from "react-icons/im"
 import { NavLink } from "react-router"
 import { RiMenuUnfoldLine } from "react-icons/ri"
-import { useMemo, useState } from "react"
+import { useState } from "react"
 import { useAuth } from "../../../store/authStore"
 import LogoutBt from "./LogoutBt"
 import LoginBt from "./LoginBtn"
+// eslint-disable-next-line react-refresh/only-export-components
+export const links = [
+    {
+        title: "Dashboard",
+        icon: <MdSpaceDashboard size={24} className="text-inherit" />,
+        to: "/",
+        for: ["admin"]
+    },
+    {
+        title: "Products",
+        icon: <AiFillProduct size={24} className="text-inherit" />,
+        to: "/products",
+        for: ["admin"]
+    },
 
+    {
+        title: "Cart",
+        icon: <FaCartShopping size={24} className="text-inherit" />,
+        to: "/cart",
+        for: ["admin"]
+    },
+
+    {
+        title: "Users",
+        icon: <FaUsers size={24} className="text-inherit" />,
+        to: "/users",
+        for: ["admin", "moderator"]
+    },
+
+    {
+        title: "Orders",
+        icon: <IoReceipt size={24} className="text-inherit" />,
+        to: "/orders",
+        for: ["admin", "moderator"]
+    },
+    {
+        title: "Blogs",
+        icon: <MdArticle size={24} className="text-inherit" />,
+        to: "/blogs",
+        for: ["admin", "moderator", "user"]
+    },
+    {
+        title: "Quotes",
+        icon: <ImQuotesLeft size={24} className="text-inherit" />,
+        to: "/quotes",
+        for: ["admin", "moderator", "user", "guest"]
+    },
+    {
+        title: "Recipes",
+        icon: <MdSpaceDashboard size={24} className="text-inherit" />,
+        to: "/recipes",
+        for: ["admin", "moderator", "user", "guest"]
+    }
+]
 const SideBar = () => {
-    const links = useMemo(() => [
-        {
-            title: "Dashboard",
-            icon: <MdSpaceDashboard size={24} className="text-inherit" />,
-            to: "/"
-        },
-        {
-            title: "Products",
-            icon: <AiFillProduct size={24} className="text-inherit" />,
-            to: "/products"
-        },
-
-        {
-            title: "Cart",
-            icon: <FaCartShopping size={24} className="text-inherit" />,
-            to: "/cart"
-        },
-
-        {
-            title: "Users",
-            icon: <FaUsers size={24} className="text-inherit" />,
-            to: "/users"
-        },
-
-        {
-            title: "Orders",
-            icon: <IoReceipt size={24} className="text-inherit" />,
-            to: "/orders"
-        },
-        {
-            title: "Blogs",
-            icon: <MdArticle size={24} className="text-inherit" />,
-            to: "/blogs"
-        },
-        {
-            title: "Quotes",
-            icon: <ImQuotesLeft size={24} className="text-inherit" />,
-            to: "/quotes"
-        },
-        {
-            title: "Recipes",
-            icon: <MdSpaceDashboard size={24} className="text-inherit" />,
-            to: "/recipes"
-        }
-    ], [])
     const [open, setOpen] = useState(false)
     const { user } = useAuth()
     return (
@@ -79,7 +87,7 @@ const SideBar = () => {
                 </div>
 
                 <div className="flex flex-col gap-4 w-full">
-                    {links.map((link, index) => (
+                    {links.filter(link => link.for.includes(user?.role ?? "guest")).map((link, index) => (
                         <NavLink to={link.to} key={index} className={({ isActive }) => `w-full transition-colors text-slate-100 flex flex-row gap-2 items-center ${isActive ? "bg-slate-100 !text-slate-800" : ""} p-2 rounded-lg`}>
                             {link.icon}
                             <span className="">{link.title}</span>
@@ -119,7 +127,7 @@ const SideBar = () => {
                 </div>
 
                 <div className="flex flex-col gap-4 w-full">
-                    {links.map((link, index) => (
+                    {links.filter(link => link.for.includes(user?.role ?? "guest")).map((link, index) => (
                         <NavLink to={link.to} key={index} onClick={() => {
                             setOpen(false)
                         }} className={({ isActive }) => `w-full transition-colors text-slate-100 flex flex-row gap-2 items-center ${isActive ? "bg-slate-100 !text-slate-800" : ""} p-2 rounded-lg`}>

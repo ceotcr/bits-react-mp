@@ -4,6 +4,8 @@ import { getAllOrders } from "../../libs/apicalls/orders"
 import { useOrders } from "../../store/ordersStore"
 import OrderCard from "../ui/orders/OrderCard"
 import { Pagination, Stack, Typography } from "@mui/material"
+import { useNavigate } from "react-router"
+import { useAuth } from "../../store/authStore"
 
 const Orders = () => {
     const { orders, setOrderDetails, pages, updateProcessStatus } = useOrders()
@@ -25,6 +27,14 @@ const Orders = () => {
         refetchOnWindowFocus: false,
         retry: 1
     })
+
+    const navigate = useNavigate()
+    const { user: authUser } = useAuth()
+
+    if (!authUser || ["admin", "moderator"].includes(authUser.role) === false) {
+        navigate('/login')
+        return null
+    }
     return (
         <div className="flex flex-col gap-4 pb-16">
             <Stack direction="row" justifyContent="space-between" alignItems="center">

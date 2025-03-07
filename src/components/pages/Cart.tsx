@@ -3,11 +3,12 @@ import { deleteOrder, getAllOrders } from "../../libs/apicalls/orders"
 import { Pagination, Stack, Typography } from "@mui/material"
 import OrderCard from "../ui/orders/OrderCard"
 import { MdAdd } from "react-icons/md"
-import { Link } from "react-router"
+import { Link, useNavigate } from "react-router"
 import { useOrders } from "../../store/ordersStore"
 import { useState } from "react"
 import { useSnackbar } from "../../store/snackbarStore"
 import Confirmation from "../base/Confirmation"
+import { useAuth } from "../../store/authStore"
 
 const Cart = () => {
     const { orders, setOrderDetails, pages, removeOrder } = useOrders()
@@ -50,6 +51,14 @@ const Cart = () => {
             })
         }
     })
+
+    const navigate = useNavigate()
+    const { user: authUser } = useAuth()
+
+    if (!authUser || ["admin"].includes(authUser.role) === false) {
+        navigate('/login')
+        return null
+    }
     return (
         <div className="flex flex-col gap-4">
             <Stack direction="row" justifyContent="space-between" alignItems="center">

@@ -9,6 +9,8 @@ import Filters from "../base/Filters";
 import { filterReducer, initialFilters } from "../../libs/reducers/productFilter";
 import ProductCard from "../ui/products/ProductCard";
 import Confirmation from "../base/Confirmation";
+import { useNavigate } from "react-router";
+import { useAuth } from "../../store/authStore";
 
 const Products = () => {
     const { showSnackbar } = useSnackbar();
@@ -81,6 +83,13 @@ const Products = () => {
         })
     }, [])
 
+    const navigate = useNavigate()
+    const { user: authUser } = useAuth()
+
+    if (!authUser || ["admin"].includes(authUser.role) === false) {
+        navigate('/login')
+        return null
+    }
     return (
         <div className="w-full h-full flex flex-col gap-4">
             <Filters categories={categories || []} filters={filters} sortBy={["title", "price", "rating"]} dispatch={filterDispatch} />

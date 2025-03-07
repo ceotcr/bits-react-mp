@@ -1,9 +1,10 @@
 import { useQuery } from "@tanstack/react-query";
-import { Link, useParams } from "react-router";
+import { Link, useNavigate, useParams } from "react-router";
 import { IAuthRes } from "../../libs/types";
 import { getUser } from "../../libs/apicalls/users";
 import { Avatar, Box, Card, CardContent, Typography, Skeleton } from "@mui/material";
 import { MdArrowBack } from "react-icons/md";
+import { useAuth } from "../../store/authStore";
 
 const User = () => {
     const params = useParams<{ id: string }>();
@@ -15,6 +16,13 @@ const User = () => {
         refetchOnWindowFocus: false,
     });
 
+    const navigate = useNavigate()
+    const { user: authUser } = useAuth()
+
+    if (!authUser || ["admin", "moderator"].includes(authUser.role) === false) {
+        navigate('/login')
+        return null
+    }
     if (isLoading) {
         return (
             <Box display="flex" flexDirection="column" alignItems="center" justifyContent="center" minHeight="100vh">

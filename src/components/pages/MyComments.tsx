@@ -1,10 +1,19 @@
 import { Avatar, Box, Container, Divider, Typography } from "@mui/material"
 import { useCommentsStore } from "../../store/commentsStore"
-import { Link } from "react-router"
+import { Link, useNavigate } from "react-router"
 import { MdArrowBack } from "react-icons/md"
+import { useAuth } from "../../store/authStore"
 
 const MyComments = () => {
     const { mycomments: comments } = useCommentsStore()
+
+    const navigate = useNavigate()
+    const { user: authUser } = useAuth()
+
+    if (!authUser || ["admin", "user", "moderator"].includes(authUser.role) === false) {
+        navigate('/login')
+        return null
+    }
     return (
         <Container maxWidth="md" className="!pt-12">
             <Link to="/blogs" className="flex items-center gap-1 text-gray-600 hover:text-gray-800">

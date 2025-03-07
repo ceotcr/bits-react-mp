@@ -1,7 +1,8 @@
 import { useQuery } from "@tanstack/react-query"
-import { useParams } from "react-router"
+import { useNavigate, useParams } from "react-router"
 import { getProduct } from "../../libs/apicalls/products"
 import ProductForm from "../ui/products/ProductForm"
+import { useAuth } from "../../store/authStore"
 
 const EditProduct = () => {
     const { id } = useParams<{ id: string }>()
@@ -12,6 +13,14 @@ const EditProduct = () => {
             return await getProduct(id as string)
         }
     })
+
+    const navigate = useNavigate()
+    const { user: authUser } = useAuth()
+
+    if (!authUser || ["admin"].includes(authUser.role) === false) {
+        navigate('/login')
+        return null
+    }
     return (
         <>
             {

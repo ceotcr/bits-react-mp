@@ -16,12 +16,13 @@ import MyComments from "./components/pages/MyComments"
 import Recipes from "./components/pages/Recipes"
 import Quotes from "./components/pages/Quotes"
 import Recipe from "./components/pages/Recipe"
+import Home from "./components/pages/Home"
 
 const AppRoutes = () => {
     return (
         <Routes>
             <Route path="/" element={<MainLayout />}>
-                <Route path="/" element="Home" />
+                <Route path="/" element={<Home />} />
                 <Route path="/products" element={<Products />} />
                 <Route path="/products/add" element={<AddProduct />} />
                 <Route path="/products/edit/:id" element={<EditProduct />} />
