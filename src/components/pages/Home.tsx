@@ -1,16 +1,14 @@
 import { useNavigate } from "react-router"
-import { useAuth } from "../../store/authStore"
+import { useEffect } from "react"
 
 const Home = () => {
     const navigate = useNavigate()
-    const { user: authUser } = useAuth()
+    useEffect(() => {
+        navigate('/recipes')
+    }, [navigate])
 
-    if (!authUser || ["admin"].includes(authUser.role) === false) {
-        navigate('/login')
-        return null
-    }
     return (
-        <div>Home</div>
+        null
     )
 }
 

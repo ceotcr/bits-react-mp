@@ -1,12 +1,14 @@
 import { Card, CardContent, Typography, CircularProgress, Container, Box, Pagination, Chip, CardMedia, Stack } from "@mui/material";
 import { useQuery } from "@tanstack/react-query";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { getRecipes } from "../../libs/apicalls/recipes"; // API call function
 import { IRecipe } from "../../libs/types";
 import TimerIcon from "@mui/icons-material/Timer";
 import RestaurantIcon from "@mui/icons-material/Restaurant";
 import LocalFireDepartmentIcon from "@mui/icons-material/LocalFireDepartment";
 import { Link } from "react-router";
+import { useAuth } from "../../store/authStore";
+import { useSnackbar } from "../../store/snackbarStore";
 
 const Recipes = () => {
     const [page, setPage] = useState(1);
@@ -21,7 +23,14 @@ const Recipes = () => {
         },
         refetchOnWindowFocus: false,
     });
+    const { user } = useAuth()
+    const { showSnackbar } = useSnackbar()
+    useEffect(() => {
 
+        if (!user) {
+            showSnackbar({ message: 'Welcome Guest', severity: 'success' })
+        }
+    }, [user])
     if (isLoading) {
         return (
             <Box display="flex" justifyContent="center" alignItems="center" height="100vh">
