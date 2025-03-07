@@ -17,7 +17,7 @@ export const links = [
         title: "Dashboard",
         icon: <MdSpaceDashboard size={24} className="text-inherit" />,
         to: "/",
-        for: ["admin"]
+        for: ["admin", "moderator", "user", "guest"]
     },
     {
         title: "Products",
