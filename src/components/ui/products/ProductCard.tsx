@@ -4,10 +4,12 @@ import { Link, useNavigate } from "react-router"
 import { MdDangerous, MdDelete, MdEdit, MdWarning } from "react-icons/md"
 import { IoBagAddSharp } from "react-icons/io5"
 import { useCartStore } from "../../../store/cartStore"
+import { useSnackbar } from "../../../store/snackbarStore"
 
 const ProductCard = ({ product, onDelete }: { product: IProduct, onDelete: () => void }) => {
     const navigate = useNavigate()
     const { addProduct, cart } = useCartStore()
+    const { showSnackbar } = useSnackbar()
     return (
         <Card className="relative">
             <Link to={`/products/${product.id}`}>
@@ -56,7 +58,10 @@ const ProductCard = ({ product, onDelete }: { product: IProduct, onDelete: () =>
                 </IconButton>
                 {
                     (product.stock > 0 && (cart.find((item) => item.id === product.id)?.quantity ?? 0) < product.stock) &&
-                    <IconButton aria-label="add to cart" className="!bg-green-500 !rounded-lg hover:!bg-green-600 !ml-auto" onClick={() => addProduct(product)}>
+                    <IconButton aria-label="add to cart" className="!bg-green-500 !rounded-lg hover:!bg-green-600 !ml-auto" onClick={() => {
+                        addProduct(product)
+                        showSnackbar({ message: 'Added to cart', severity: 'success' })
+                    }}>
                         <IoBagAddSharp className="text-white" />
                     </IconButton>
                 }

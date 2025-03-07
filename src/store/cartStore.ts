@@ -54,6 +54,11 @@ export const useCartStore = create<ICartStore>((set) => ({
                     ),
                 };
             }
+            else if (existingProduct && existingProduct.quantity === 1) {
+                return {
+                    cart: state.cart.filter((p) => p.id !== id),
+                };
+            }
             return state;
         });
     },
