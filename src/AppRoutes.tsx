@@ -15,6 +15,7 @@ import Blog from "./components/pages/Blog"
 import MyComments from "./components/pages/MyComments"
 import Recipes from "./components/pages/Recipes"
 import Quotes from "./components/pages/Quotes"
+import Recipe from "./components/pages/Recipe"
 
 const AppRoutes = () => {
     return (
@@ -34,6 +35,7 @@ const AppRoutes = () => {
                 <Route path="/blogs/mycomments" element={<MyComments />} />
                 <Route path="/blogs/:id" element={<Blog />} />
                 <Route path="/recipes" element={<Recipes />} />
+                <Route path="/recipes/:id" element={<Recipe />} />
                 <Route path="/quotes" element={<Quotes />} />
             </Route>
             <Route path="/login" element={<Login />} />

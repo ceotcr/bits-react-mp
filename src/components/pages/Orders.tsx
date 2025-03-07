@@ -26,7 +26,7 @@ const Orders = () => {
         retry: 1
     })
     return (
-        <div className="flex flex-col gap-4">
+        <div className="flex flex-col gap-4 pb-16">
             <Stack direction="row" justifyContent="space-between" alignItems="center">
                 <Typography variant="h4" className="!font-bold">Orders</Typography>
             </Stack>
