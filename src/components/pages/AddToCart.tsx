@@ -7,6 +7,7 @@ import { useMutation } from "@tanstack/react-query"
 import { createOrder } from "../../libs/apicalls/orders"
 import { useSnackbar } from "../../store/snackbarStore"
 import { useOrders } from "../../store/ordersStore"
+import { MdArrowBack } from "react-icons/md"
 
 const AddToCart = () => {
     const { cart, clearCart } = useCartStore()
@@ -34,6 +35,10 @@ const AddToCart = () => {
     return (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="flex flex-col gap-4">
+                <Link to="/cart" className="flex items-center gap-1 text-gray-600 hover:text-gray-800 mb-4">
+                    <MdArrowBack size={24} />
+                    <span>Back to Carts</span>
+                </Link>
                 <Typography variant="h4">Cart</Typography>
                 {cart.length > 0 ?
                     cart.map((item) => (

@@ -1,10 +1,10 @@
 import { useQuery } from "@tanstack/react-query"
-import { useParams } from "react-router"
+import { Link, useParams } from "react-router"
 import { getProduct } from "../../libs/apicalls/products"
 import { IProduct } from "../../libs/types"
 import { useEffect, useState } from "react"
 import { Button, Chip, Rating, Stack, Typography } from "@mui/material"
-import { MdArrowDropDown, MdCheck, MdClose, MdDangerous, MdWarning } from "react-icons/md"
+import { MdArrowBack, MdArrowDropDown, MdCheck, MdClose, MdDangerous, MdWarning } from "react-icons/md"
 import Accordion from '@mui/material/Accordion';
 import AccordionDetails from '@mui/material/AccordionDetails';
 import AccordionSummary from '@mui/material/AccordionSummary';
@@ -31,6 +31,10 @@ const Product = () => {
     return (
         <div className="grid grid-cols-1 md:grid-cols-2 w-full mx-auto rounded-lg gap-4 p-4">
             <div className="w-full flex flex-col gap-4 md:!sticky !top-0 h-fit">
+                <Link to="/products" className="flex items-center gap-1 text-gray-600 hover:text-gray-800 mb-4">
+                    <MdArrowBack size={24} />
+                    <span>Back to Products</span>
+                </Link>
                 <div className="w-full">
                     <img src={product.images[selectedImage]} alt={product.title} className="w-full h-96 object-center object-cover rounded-lg" />
                 </div>

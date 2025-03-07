@@ -1,7 +1,7 @@
 import { Stack, TextField, FormControl, InputLabel, Select, MenuItem, IconButton } from '@mui/material'
 import { useState } from 'react';
 import { MdAdd } from 'react-icons/md';
-import { useNavigate } from 'react-router';
+import { Link, useNavigate } from 'react-router';
 
 const Filters = ({ filters, dispatch, categories, sortBy, isBlogs }: {
     filters: {
@@ -85,11 +85,11 @@ const Filters = ({ filters, dispatch, categories, sortBy, isBlogs }: {
                 </FormControl>
             </Stack>
             {
-                !isBlogs &&
-
-                <IconButton aria-label="add" className='h-fit !bg-blue-400 hover:!bg-blue-500 !text-white !mt-2' onClick={() => navigate("/products/add")}>
-                    <MdAdd size={24} />
-                </IconButton>
+                isBlogs ?
+                    <Link to="/blogs/mycomments" className='!bg-blue-400 hover:!bg-blue-500 !text-white !mt-2 h-fit !rounded-lg !px-4 !py-2 !text-sm !font-semibold !shadow-md !hover:shadow-lg'>My Comments</Link> :
+                    <IconButton aria-label="add" className='h-fit !bg-blue-400 hover:!bg-blue-500 !text-white !mt-2' onClick={() => navigate("/products/add")}>
+                        <MdAdd size={24} />
+                    </IconButton>
             }
         </Stack >
     )

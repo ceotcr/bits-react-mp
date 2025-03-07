@@ -1,29 +1,34 @@
+import { Link } from "react-router";
+import { Card, CardActionArea, CardContent, Typography, Chip, Box } from "@mui/material";
 import { IBlog } from "../../../libs/types";
 
 export const BlogCard = ({ blog }: { blog: IBlog }) => {
     return (
-        <div className="bg-white p-4 rounded-lg shadow-md hover:shadow-lg transition-shadow">
-            <h2 className="text-xl font-semibold text-gray-900">{blog.title}</h2>
+        <Card sx={{ bgcolor: "background.paper", boxShadow: 3, borderRadius: 2 }}>
+            <CardActionArea component={Link} to={`/blogs/${blog.id}`} className="h-full">
+                <CardContent>
+                    <Typography variant="h6" component="h2" color="text.primary" gutterBottom>
+                        {blog.title}
+                    </Typography>
 
-            <p className="text-gray-600">
-                {blog.body.length > 100 ? `${blog.body.slice(0, 100)}...` : blog.body}
-            </p>
+                    <Typography variant="body2" color="text.secondary">
+                        {blog.body.length > 100 ? `${blog.body.slice(0, 100)}...` : blog.body}
+                    </Typography>
 
-            <div className="flex justify-between items-center mt-4">
-                <div className="flex flex-wrap gap-2">
-                    {blog.tags?.map((tag) => (
-                        <span key={tag} className="bg-gray-200 text-gray-700 text-xs px-2 py-1 rounded-full">
-                            {tag}
-                        </span>
-                    ))}
-                </div>
+                    {/* Tags Section */}
+                    <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1, mt: 2 }}>
+                        {blog.tags?.map((tag) => (
+                            <Chip key={tag} label={tag} size="small" sx={{ bgcolor: "grey.200" }} />
+                        ))}
+                    </Box>
 
-                <div className="flex gap-3 text-sm text-gray-600">
-                    <span>👍 {blog.reactions?.likes ?? 0}</span>
-                    <span>👎 {blog.reactions?.dislikes ?? 0}</span>
-                    <span>👀 {blog.views ?? 0}</span>
-                </div>
-            </div>
-        </div>
+                    <Box sx={{ display: "flex", justifyContent: "space-between", mt: 2, color: "text.secondary" }}>
+                        <Typography variant="caption">👍 {blog.reactions?.likes ?? 0}</Typography>
+                        <Typography variant="caption">👎 {blog.reactions?.dislikes ?? 0}</Typography>
+                        <Typography variant="caption">👀 {blog.views ?? 0}</Typography>
+                    </Box>
+                </CardContent>
+            </CardActionArea>
+        </Card>
     );
 };

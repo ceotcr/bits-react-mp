@@ -12,6 +12,7 @@ import Users from "./components/pages/Users"
 import User from "./components/pages/User"
 import Blogs from "./components/pages/Blogs"
 import Blog from "./components/pages/Blog"
+import MyComments from "./components/pages/MyComments"
 
 const AppRoutes = () => {
     return (
@@ -28,6 +29,7 @@ const AppRoutes = () => {
                 <Route path="/users" element={<Users />} />
                 <Route path="/users/:id" element={<User />} />
                 <Route path="/blogs" element={<Blogs />} />
+                <Route path="/blogs/mycomments" element={<MyComments />} />
                 <Route path="/blogs/:id" element={<Blog />} />
             </Route>
             <Route path="/login" element={<Login />} />

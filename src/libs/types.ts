@@ -155,4 +155,17 @@ export interface IBlog {
     };
     views: number;
     userId: number;
+    comments: IComment[];
+}
+
+export interface IComment {
+    id: number;
+    body: string;
+    postId: number;
+    likes: number;
+    user: {
+        id: number;
+        username: string;
+        fullName: string;
+    };
 }

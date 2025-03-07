@@ -1,8 +1,9 @@
 import { useQuery } from "@tanstack/react-query";
-import { useParams } from "react-router";
+import { Link, useParams } from "react-router";
 import { IAuthRes } from "../../libs/types";
 import { getUser } from "../../libs/apicalls/users";
 import { Avatar, Box, Card, CardContent, Typography, Skeleton } from "@mui/material";
+import { MdArrowBack } from "react-icons/md";
 
 const User = () => {
     const params = useParams<{ id: string }>();
@@ -34,6 +35,11 @@ const User = () => {
 
     return (
         <Box maxWidth={800} mx="auto" p={3}>
+
+            <Link to="/users" className="flex items-center gap-1 text-gray-600 hover:text-gray-800 mb-4">
+                <MdArrowBack size={24} />
+                <span>Back to Users</span>
+            </Link>
             <Card sx={{ display: "flex", alignItems: "center", p: 3, mb: 3 }}>
                 <Avatar src={user.image} alt={user.firstName} sx={{ width: 96, height: 96, mr: 2 }} />
                 <Box>
