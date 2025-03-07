@@ -13,6 +13,8 @@ import User from "./components/pages/User"
 import Blogs from "./components/pages/Blogs"
 import Blog from "./components/pages/Blog"
 import MyComments from "./components/pages/MyComments"
+import Recipes from "./components/pages/Recipes"
+import Quotes from "./components/pages/Quotes"
 
 const AppRoutes = () => {
     return (
@@ -31,6 +33,8 @@ const AppRoutes = () => {
                 <Route path="/blogs" element={<Blogs />} />
                 <Route path="/blogs/mycomments" element={<MyComments />} />
                 <Route path="/blogs/:id" element={<Blog />} />
+                <Route path="/recipes" element={<Recipes />} />
+                <Route path="/quotes" element={<Quotes />} />
             </Route>
             <Route path="/login" element={<Login />} />
         </Routes>

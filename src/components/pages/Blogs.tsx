@@ -4,6 +4,7 @@ import Filters from "../base/Filters"
 import { useReducer } from "react";
 import { BlogCard } from "../ui/blogs/BlogCard";
 import { filterReducer, initialFilters } from "../../libs/reducers/blogsFilter";
+import { Pagination } from "@mui/material";
 
 const Blogs = () => {
     const [filters, filterDispatch] = useReducer(filterReducer, initialFilters
@@ -44,6 +45,7 @@ const Blogs = () => {
                     </div>
                 )
             }
+            <Pagination page={filters.page} count={10} onChange={(_e, page) => filterDispatch({ type: "SET_PAGE", payload: page })} className="fixed bottom-4 bg-white p-2 rounded-lg right-4" />
         </div>
     )
 }

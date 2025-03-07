@@ -23,16 +23,16 @@ export type TAction = {
 export const filterReducer = (state: TFilter, action: TAction) => {
     switch (action.type) {
         case "SET_SEARCH":
-            return { ...state, search: action.payload as string, category: "all" };
+            return { ...state, search: action.payload as string, category: "all", page: 1 };
         case "SET_SORT_BY":
-            return { ...state, sortBy: action.payload as string };
+            return { ...state, sortBy: action.payload as string, page: 1 };
         case "SET_ORDER":
-            return { ...state, order: action.payload as string };
+            return { ...state, order: action.payload as string, page: 1 };
         case "SET_PAGE":
             return { ...state, page: action.payload as number };
         case "SET_CATEGORY":
             return {
-                ...state, category: action.payload as string, search: ""
+                ...state, category: action.payload as string, search: "", page: 1
             }
         default:
             return state;
