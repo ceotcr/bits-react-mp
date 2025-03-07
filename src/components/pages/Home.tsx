@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router";
-import { Card, CardContent, Typography, Box, Paper, IconButton } from "@mui/material";
+import { Card, CardContent, Typography, Box, IconButton } from "@mui/material";
 import { useAuth } from "../../store/authStore";
 import { links } from "../ui/layout/SideBar";
 
