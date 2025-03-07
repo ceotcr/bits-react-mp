@@ -8,6 +8,13 @@ interface IFilterState {
     page: number;
 }
 
+export const initialFilters = {
+    search: "",
+    sortBy: "default",
+    order: "asc",
+    category: "all",
+    page: 1,
+};
 interface IFilterAction {
     type: string;
     payload: string;

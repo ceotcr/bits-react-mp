@@ -9,31 +9,14 @@ import { Link } from 'react-router';
 import UserEditForm from '../ui/users/UserEditForm';
 import { IAuthRes } from '../../libs/types';
 import { useSnackbar } from '../../store/snackbarStore';
+import { filterReducer, initialFilters } from '../../libs/reducers/usersFilter';
 
 const Users = () => {
     const { users, setUsers, updateUser: updateStoreUser, pages } = useUsersStore();
     const [selectedUser, setSelectedUser] = useState<IAuthRes | null>(null);
     const [openDialog, setOpenDialog] = useState(false);
 
-    const [filters, handleFilterChange] = useReducer((state, action) => {
-        switch (action.type) {
-            case "SET_SEARCH":
-                return { ...state, search: action.payload, filterKey: "", filterValue: "" };
-            case "SET_FILTER_KEY":
-                return { ...state, filterKey: action.payload, search: "", filterValue: "" };
-            case "SET_FILTER_VALUE":
-                return { ...state, filterValue: action.payload, search: "" };
-            case "SET_PAGE":
-                return { ...state, page: Number(action.payload) };
-            default:
-                return state;
-        }
-    }, {
-        search: "",
-        filterKey: "",
-        filterValue: "",
-        page: 1
-    });
+    const [filters, handleFilterChange] = useReducer(filterReducer, initialFilters);
     const { isLoading, error } = useQuery({
         queryKey: ["users", filters],
         queryFn: async () => {

@@ -38,7 +38,10 @@ const UserFilters = ({ filters, dispatch, filterKeyValues }: {
                     className="!rounded-lg"
                     labelId="Filter Key"
                     value={filters.filterKey}
-                    onChange={(e) => dispatch({ type: "SET_FILTER_KEY", payload: e.target.value })}
+                    onChange={(e) => {
+                        dispatch({ type: "SET_FILTER_KEY", payload: e.target.value })
+                        setSearch("")
+                    }}
                 >
                     {filterKeyValues.map((filter) => (
                         <MenuItem key={filter.key} value={filter.key}>{filter.key}</MenuItem>
@@ -55,7 +58,10 @@ const UserFilters = ({ filters, dispatch, filterKeyValues }: {
                     labelId="Filter Value"
                     disabled={!filters.filterKey}
                     value={filters.filterValue}
-                    onChange={(e) => dispatch({ type: "SET_FILTER_VALUE", payload: e.target.value })}
+                    onChange={(e) => {
+                        dispatch({ type: "SET_FILTER_VALUE", payload: e.target.value })
+                        setSearch("")
+                    }}
                 >
                     {filters.filterKey && filterKeyValues.find((f) => f.key === filters.filterKey)?.values.map((value) => (
                         <MenuItem key={value} value={value}>{value}</MenuItem>

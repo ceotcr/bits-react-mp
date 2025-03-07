@@ -6,17 +6,9 @@ import { useSnackbar } from "../../store/snackbarStore";
 import { useProducts } from "../../store/productsStore";
 import { Pagination } from "@mui/material";
 import Filters from "../base/Filters";
-import { filterReducer } from "../../libs/reducers/productFilter";
+import { filterReducer, initialFilters } from "../../libs/reducers/productFilter";
 import ProductCard from "../ui/products/ProductCard";
 import Confirmation from "../base/Confirmation";
-
-const initialFilters = {
-    search: "",
-    sortBy: "default",
-    order: "asc",
-    category: "all",
-    page: 1,
-};
 
 const Products = () => {
     const { showSnackbar } = useSnackbar();
@@ -91,7 +83,7 @@ const Products = () => {
 
     return (
         <div className="w-full h-full flex flex-col gap-4">
-            <Filters isProductsPage categories={categories || []} filters={filters} sortBy={["title", "price", "rating"]} dispatch={filterDispatch} />
+            <Filters categories={categories || []} filters={filters} sortBy={["title", "price", "rating"]} dispatch={filterDispatch} />
             {isLoading && <div>Loading...</div>}
             {isError && <div>{error.name}: {error.message}</div>}
             {products && (

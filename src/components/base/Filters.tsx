@@ -3,15 +3,15 @@ import { useState } from 'react';
 import { MdAdd } from 'react-icons/md';
 import { useNavigate } from 'react-router';
 
-const Filters = ({ filters, dispatch, categories, sortBy, isProductsPage }: {
+const Filters = ({ filters, dispatch, categories, sortBy, isBlogs }: {
     filters: {
         search: string;
         sortBy: string;
         order: string;
         category: string;
     },
+    isBlogs?: boolean,
     categories: string[],
-    isProductsPage?: boolean,
     sortBy: string[],
     dispatch: React.Dispatch<{ type: string, payload: string }>
 }) => {
@@ -39,28 +39,23 @@ const Filters = ({ filters, dispatch, categories, sortBy, isProductsPage }: {
                 enterKeyHint='search'
                 helperText="Press Enter to search"
             />
-            {
-                isProductsPage && (
-
-                    <FormControl className="w-[160px]">
-                        <InputLabel className="bg-slate-100 !px-2" id="Category">Category</InputLabel>
-                        <Select
-                            className="!rounded-lg"
-                            labelId="Category"
-                            value={filters.category}
-                            onChange={(e) => {
-                                dispatch({ type: "SET_CATEGORY", payload: e.target.value })
-                                setSearch("")
-                            }}
-                        >
-                            <MenuItem value={"all"}>All</MenuItem>
-                            {categories && categories.map((category) => (
-                                <MenuItem key={category} value={category}>{category.charAt(0).toUpperCase() + category.slice(1)}</MenuItem>
-                            ))}
-                        </Select>
-                    </FormControl>
-                )
-            }
+            <FormControl className="w-[160px]">
+                <InputLabel className="bg-slate-100 !px-2" id="Category">{isBlogs ? "Tag" : "Category"}</InputLabel>
+                <Select
+                    className="!rounded-lg"
+                    labelId="Category"
+                    value={filters.category}
+                    onChange={(e) => {
+                        dispatch({ type: "SET_CATEGORY", payload: e.target.value })
+                        setSearch("")
+                    }}
+                >
+                    <MenuItem value={"all"}>All</MenuItem>
+                    {categories && categories.map((category) => (
+                        <MenuItem key={category} value={category}>{category.charAt(0).toUpperCase() + category.slice(1)}</MenuItem>
+                    ))}
+                </Select>
+            </FormControl>
             <Stack direction="row" className=' !space-0 !gap-2'>
                 <FormControl className="w-[160px]">
                     <InputLabel className="bg-slate-100 !px-2" id="Sort By">Sort By</InputLabel>
@@ -89,9 +84,13 @@ const Filters = ({ filters, dispatch, categories, sortBy, isProductsPage }: {
                     </Select>
                 </FormControl>
             </Stack>
-            <IconButton aria-label="add" className='h-fit !bg-blue-400 hover:!bg-blue-500 !text-white !mt-2' onClick={() => navigate("/products/add")}>
-                <MdAdd size={24} />
-            </IconButton>
+            {
+                !isBlogs &&
+
+                <IconButton aria-label="add" className='h-fit !bg-blue-400 hover:!bg-blue-500 !text-white !mt-2' onClick={() => navigate("/products/add")}>
+                    <MdAdd size={24} />
+                </IconButton>
+            }
         </Stack >
     )
 }
