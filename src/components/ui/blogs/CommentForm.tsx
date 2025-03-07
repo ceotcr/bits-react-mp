@@ -5,8 +5,8 @@ import { useMutation } from "@tanstack/react-query";
 import { IComment } from "../../../libs/types";
 import { addComment as addCommentAPI } from "../../../libs/apicalls/blogs"
 import { useAuth } from "../../../store/authStore";
-const AddCommentForm = ({ setComments }: {
-    setComments: React.Dispatch<React.SetStateAction<IComment[]>>;
+const AddCommentForm = ({ setComments, postId }: {
+    setComments: React.Dispatch<React.SetStateAction<IComment[]>>; postId: number
 }) => {
     const [comment, setComment] = useState("");
     const { addComment } = useCommentsStore();
@@ -17,7 +17,7 @@ const AddCommentForm = ({ setComments }: {
             return await addCommentAPI({
                 body: comment,
                 userId: user?.id,
-                postId: 1
+                postId
             })
         },
         onSuccess: (data) => {

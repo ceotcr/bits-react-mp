@@ -54,7 +54,7 @@ const Blog = () => {
                 <Typography>👀 {blog.views} views</Typography>
             </Stack>
 
-            <AddCommentForm setComments={setComments} />
+            <AddCommentForm setComments={setComments} postId={blog.id} />
             <Box sx={{ mt: 4 }}>
                 <Typography variant="h6">Comments ({comments.length})</Typography>
                 <Divider sx={{ my: 2 }} />
